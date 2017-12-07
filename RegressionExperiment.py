@@ -32,6 +32,9 @@ def g(w,X,Y,lamda = 0.0):
     # L2 norm
     return 1.0/num_records * X.transpose().dot(error(w,X,Y)) \
             + lamda * w
+            
+def MSE(y,y_hat):
+    return ((y-y_hat)**2).sum()/len(y)
 
 data = load_svmlight_file("./resources/housing_scale.txt")
 # add interception
@@ -42,7 +45,7 @@ Y = data[1].reshape((len(data[1]),1))
 num_records,num_features  = np.shape(X) 
 
 X_train, X_test, Y_train, Y_test = train_test_split(\
-X, Y, test_size=0.33,random_state=42)
+X, Y, test_size=0.33,random_state=5)
 Y_train = Y_train.reshape((len(Y_train),1))
 Y_test = Y_test.reshape((len(Y_test),1))
 
@@ -53,16 +56,29 @@ lamda = 0.5
 eta = 0.05
 loss_train = []
 loss_test = []
+MSE_train = []
+MSE_test = []
 max_iterate = 30
 for epoch in range(max_iterate):
     #print("epoch:",epoch)
     loss_train.append(L(w,X_train,Y_train,lamda))
     loss_test.append(L(w,X_test,Y_test,lamda))
+    MSE_train.append(MSE(Y_train,h(w,X_train)))
+    MSE_test.append(MSE(Y_test,h(w,X_test)))
     w = w - eta * g(w,X_train,Y_train,lamda)
     
-fig, ax = plt.subplots()
-train_loss_line = ax.plot(range(max_iterate),loss_train,label='train loss')
-test_loss_line = ax.plot(range(max_iterate),loss_test,label='test loss')
-plt.legend()
+plt.subplot(211)
+train_loss_line = plt.plot(range(max_iterate),loss_train,label='train loss')
+test_loss_line = plt.plot(range(max_iterate),loss_test,label='test loss')
+ax=plt.gca()
 ax.set(xlabel='Epoch', ylabel='Loss with l2 norm')
+plt.legend()
+
+plt.subplot(212)
+train_mse_line = plt.plot(range(max_iterate),MSE_train,label='train MSE')
+test_mse_line = plt.plot(range(max_iterate),MSE_test,label='test MSE')
+ax=plt.gca()
+ax.set(xlabel='Epoch', ylabel='MSE')
+plt.legend()
+
 plt.show()

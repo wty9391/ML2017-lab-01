@@ -67,7 +67,7 @@ w = np.random.normal(size=(num_features,1))
 lamda = 0.1
 eta = 0.2
 C = 1.0
-threshold=0.5
+threshold=0.7 
 max_iterate = 100
 loss_train = []
 loss_test = []
