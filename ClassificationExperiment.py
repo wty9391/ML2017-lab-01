@@ -27,10 +27,6 @@ Y_test = Y_test.reshape((len(Y_test),1))
 # initialize w
 init_w = np.random.normal(size=(num_features,1))
 
-lamda = 0.1
-eta = 0.2
-C = 1.0
-threshold=0.7 
 max_iterate = 250
 
 param_grid = [
@@ -55,8 +51,9 @@ print ("Result has been saved in",result_path)
 
 print ("Printing the best 5 models loss curves")
 for i in range(5):
-    print ("Figure of",result.loc[i,'params'])
-    classifier = LinearClassifier.LinearClassifier(init_w,max_epoch=max_iterate,**result.loc[i,'params'])
+    params = result.loc[i,'params']
+    print ("Figure of",params)
+    classifier = LinearClassifier.LinearClassifier(init_w,max_epoch=max_iterate,**params)
     classifier.fit(X_train,Y_train)
     loss_train = classifier.getLossHistory(X_train,Y_train)
     loss_test = classifier.getLossHistory(X_test,Y_test)
@@ -72,7 +69,7 @@ for i in range(5):
     test_accuracy_line = ax_e.plot(range(max_iterate),accuracy_test,'g',label='test accuracy')
     
     ax.set(xlabel='Epoch', ylabel='Loss with l2 norm')
-    ax_e.set_ylabel('Accuracy with threshold='+str(threshold))
+    ax_e.set_ylabel('Accuracy with threshold='+str(params['threshold']))
     
     ax.legend(loc=4)
     ax_e.legend(loc=1)
