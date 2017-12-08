@@ -83,7 +83,7 @@ class LinearClassifier(BaseEstimator,ClassifierMixin):
         self : object
             Returns self.
         """
-        self.w_history.append(self.w)
+        self.classes_, _ = np.unique(Y, return_inverse=True)
         for epoch in range(self.max_epoch):
             self.w = self.w - self.eta * self.g(X,Y)
             self.w_history.append(self.w)
@@ -93,8 +93,8 @@ class LinearClassifier(BaseEstimator,ClassifierMixin):
     def __predict(self,w,X):
         threshold = self.threshold
         raw = self.__h(w,X)
-        raw[raw<=threshold] = -1
-        raw[raw>threshold] = 1
+        raw[raw<=threshold] = self.classes_[0]
+        raw[raw>threshold] = self.classes_[1]
         return raw
     
     def predict(self, X):

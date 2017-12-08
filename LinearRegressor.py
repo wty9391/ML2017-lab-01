@@ -74,7 +74,6 @@ class LinearRegressor(BaseEstimator,RegressorMixin):
         self : object
             Returns self.
         """
-        self.w_history.append(self.w)
         for epoch in range(self.max_epoch):
             self.w = self.w - self.eta * self.g(X,Y)
             self.w_history.append(self.w)
